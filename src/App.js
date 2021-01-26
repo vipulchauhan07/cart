@@ -72,7 +72,7 @@ class App extends React.Component {
     const items = products.filter((item) => item.id !== id);
 
     this.setState({
-      products: items 
+      products: items
     });
   }
 
@@ -88,17 +88,27 @@ class App extends React.Component {
     return count;
   }
 
-  render() {
+  getCartTotal = () => {
     const {products} = this.state;
+    let total = 0;
+    products.forEach((product) => {
+      total = total + product.qty * product.price;
+    })
+    return total;
+  }
+
+  render() {
+    const { products } = this.state;
     return (
       <div className="App">
-        <Navbar counts={this.getCartCount()}/>
+        <Navbar counts={this.getCartCount()} />
         <Cart
           products={products}
           onIncreaseQuantity={this.handleIncreaseQuantity}
           onDecreaseQuantity={this.handleDecreaseQuantity}
           onDeleteItem={this.handleDeleteProduct}
         />
+        <div style={{padding: 10, fontSize:20}}>Total: {this.getCartTotal()}</div>
       </div>
     );
   }
