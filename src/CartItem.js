@@ -2,42 +2,10 @@ import React from 'react';
 
 class CartItem extends React.Component {
  
-    //     // this.increaseQuantity = this.increaseQuantity.bind(this); For binding the state to this at the function
-    // }
-
-    increaseQuantity = () => {
-        // this.state.qty += 1;
-        // console.log('this', this.state);
-        // setState 1st form of rendering -- if previous state is not required use this method of rendering 
-        // this.setState({  
-        //     qty: this.state.qty + 1
-        // }); // Shallow Merging
-
-
-        // setState() 2nd form of rendering -- if previous state is required use this method
-
-        this.setState((prevState) => {
-            return {
-                qty: prevState.qty + 1
-            }
-        });
-    }
-
-    decreaseQuantity = () => {
-        const { qty } = this.state;
-        if (qty === 0)
-            return;
-
-        this.setState((prevState) => {
-                return {
-                    qty : prevState.qty - 1
-                }
-        })
-    }
-    
+   
     render() {
         const { price, title, qty } = this.props.product;
-        // console.log('this.prop', this.props);
+        console.log('this.prop', this.props);
 
         return (
             <div className="cart-item">
@@ -56,7 +24,7 @@ class CartItem extends React.Component {
                         className="action-icons"
                         src="https://www.flaticon.com/svg/static/icons/svg/1828/1828926.svg" 
                         // onClick={this.increaseQuantity.bind(this)} // for binding the state to this because this.increase doesn't know the state of the cart 
-                        onClick={this.increaseQuantity}
+                        onClick={() => this.props.onIncreaseQuantity(this.props.product) }
                         />
 
                         <img alt="decrease"
