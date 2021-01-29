@@ -1,45 +1,43 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './App.css';
 import Cart from './Cart';
 import Navbar from './Navbar'
-import firebase from 'firebase';
+import firebase from 'firebase'
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      products: [
-        {
-          price: 999,
-          title: 'Phone',
-          qty: 1,
-          img: '',
-          id: 1
-        },
-        {
-          price: 1000,
-          title: 'Watch',
-          qty: 23,
-          img: '',
-          id: 2
-        },
-        {
-          price: 10000,
-          title: 'Tv',
-          qty: 10,
-          img: '',
-          id: 3
-        },
-        {
-          price: 999,
-          title: 'Laptop',
-          qty: 1,
-          img: '',
-          id: 4
-        }
-      ]
+      products: [],
+      loading: true
     }
   }
+
+
+
+  componentDidMount() {
+    firebase
+      .firestore()
+      .collection('products')
+      .get()
+      .then((snapshot) => {
+        console.log(snapshot)
+        snapshot.docs.map((doc) => {
+          console.log(doc.data());
+        })
+
+        const products = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          data['id'] = doc.id;
+          return data;
+        })
+          this.setState({
+            products,
+            loading:false
+          })
+      })
+  }
+
 
   // for increasing the qty
   handleIncreaseQuantity = (product) => {
@@ -90,7 +88,7 @@ class App extends React.Component {
   }
 
   getCartTotal = () => {
-    const {products} = this.state;
+    const { products } = this.state;
     let total = 0;
     products.forEach((product) => {
       total = total + product.qty * product.price;
@@ -99,7 +97,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { products } = this.state;
+    const { products, loading } = this.state;
     return (
       <div className="App">
         <Navbar counts={this.getCartCount()} />
@@ -109,7 +107,8 @@ class App extends React.Component {
           onDecreaseQuantity={this.handleDecreaseQuantity}
           onDeleteItem={this.handleDeleteProduct}
         />
-        <div style={{padding: 10, fontSize:20}}>Total: {this.getCartTotal()}</div>
+        {loading && <h1>Loading Products ...</h1>}
+        <div style={{ padding: 10, fontSize: 20 }}>Total: {this.getCartTotal()}</div>
       </div>
     );
   }
