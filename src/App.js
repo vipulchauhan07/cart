@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import Cart from './Cart';
 import Navbar from './Navbar'
+import firebase from 'firebase';
 
 class App extends React.Component {
   constructor() {
